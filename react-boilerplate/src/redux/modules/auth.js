@@ -176,7 +176,7 @@ export function login(strategy, data) {
           ...data,
           strategy,
           socketId
-        }).catch(error => { console.log(error); });
+        });
         await setCookie({ app })(response);
         setToken({ client, app, restApp })(response);
         setUser({ app, restApp })(response);

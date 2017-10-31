@@ -2,7 +2,7 @@ import { discard, iff, isProvider } from 'feathers-hooks-common';
 import auth from 'feathers-authentication';
 import local from 'feathers-authentication-local';
 import { restrictToOwner } from 'feathers-authentication-hooks';
-// import errors from 'feathers-errors';
+import errors from 'feathers-errors';
 import { validateHook } from 'hooks';
 import { required, email, match, unique } from 'utils/validation';
 
@@ -14,10 +14,9 @@ const schemaValidator = {
 
 function validate() {
   return hook => {
-    if (hook.data.facebook) {
-      hook.data.email = hook.data.facebook.profile.emails[0].value;
+    if (hook.data.facebook && !hook.data.email) {
+      throw new errors.BadRequest('Incomplete oauth registration', hook.data);
     }
-
     return validateHook(schemaValidator)(hook);
   };
 }
